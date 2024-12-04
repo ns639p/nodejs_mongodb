@@ -3,13 +3,24 @@ const fs = require('fs')
 const app = express()
 const port = 1000
 const movies =  JSON.parse(fs.readFileSync('./data/movies.json'));
-app.use(express.json())
 
+const logger = function(req,res,next){
+    console.log('custom middleware caller');
+    next()
+}
+
+app.use(express.json())
+app.use(logger)
+app.use((req,res,next)=>{
+    req.requestedAt = new Date().toISOString();
+    next();
+})
 
 //Route handler function 
 const getAllMovies = (req,res)=>{
     res.status(200).json({
         status:"success",
+        requestedAt:req.requestedAt,
         data:{
             movies:movies
         }
