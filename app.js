@@ -53,6 +53,31 @@ app.post('/api/v1/movies',(req,res)=>{
 })
 
 
+app.patch('/api/v1/movies/:id',(req,res)=>{
+    console.log('receiving request')
+    const id = req.params.id * 1;
+    const movieToUpdate = movies.find(el=>el.id===id);
+    if (!movieToUpdate){
+        console.log('hits for 404')
+        return res.status(404).json({
+            status:'failed',
+            message:'Movie with ID ' +id+ ' is not found'
+        })
+    }
+    let index = movies.indexOf(movieToUpdate);
+    Object.assign(movieToUpdate,req.body);//we are passing two objects to Object.assign what happens is the two object will be merged if thy have the same properties then no problem if they have the different properties the property of second object will be implemented
+    movies[index] = movieToUpdate
+    fs.writeFile('./data/movies.json',JSON.stringify(movies),(err)=>{
+        console.log('hits write file')
+        res.status(200).json({
+            status:'success',
+            data:{
+                movie:movieToUpdate
+            }
+        })
+    })
+})
+
 app.listen(port,()=>{
     console.log('starting server....')
 })
