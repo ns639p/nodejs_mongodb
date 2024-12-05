@@ -9,7 +9,10 @@ const logger = function(req,res,next){
 }
 
 app.use(express.json())
-app.use(morgan('dev'))//morgan is not a middle ware this is a function that returns a middle ware. Search 'morgan github' in google and open the index.js file in line 59 you will see the morgan functon taking in only two parameters but it returns a middleware function called logger (line 103) that takes three parameters req,res and next
+if (process.env.NODE_ENV === 'development')
+{
+    app.use(morgan('dev'))//morgan is not a middle ware this is a function that returns a middle ware. Search 'morgan github' in google and open the index.js file in line 59 you will see the morgan functon taking in only two parameters but it returns a middleware function called logger (line 103) that takes three parameters req,res and next;
+}
 app.use(express.static('./public'))
 app.use(logger)//the above two have () but this doesnt why ? because this is a middleware function and takes three parameters req,res,next
 app.use((req,res,next)=>{

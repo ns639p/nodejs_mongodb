@@ -1,6 +1,11 @@
+const dotenv = require('dotenv')
+dotenv.config({path:'./config.env'})
+
 const app = require('./app')
 
-const port = 1000;
-app.listen(port,()=>{
-    console.log('starting server....');
+// console.log(app.get('env'))
+console.log(process.env)
+
+app.listen(1000,()=>{
+    console.log('server has started....');
 })
