@@ -58,7 +58,21 @@ exports.createMovie = async(req,res)=>{
 }
 
 
-exports.updateMovie = (req,res)=>{
+exports.updateMovie = async(req,res)=>{
+    try{
+        const updatedMovie = await Movie.findByIdAndUpdate(req.params.id,req.body,{runValidators:true,new:true})
+        res.status(200).json({
+            status:'success',
+            data:{
+                movie:updatedMovie
+            }
+        })
+    }catch(err){
+        res.status(404).json({
+            status:'failed',
+            message: err.message
+        })
+    }
 }
 
 
