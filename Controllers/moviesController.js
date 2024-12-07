@@ -6,12 +6,19 @@ const Movie = require('./../Models/movieModel')
 
 exports.getAllMovies = async(req,res)=>{
     try{
-        console.log(req.query)
         let queryStr = JSON.stringify(req.query);
-        queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g,(match)=>`$${match}`)
-        let queryobj = JSON.parse(queryStr)
-        console.log(queryobj)
-        const movies = await Movie.find(queryobj);
+        queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g,(match)=>`$${match}`);
+        let queryObj = JSON.parse(queryStr);
+        delete queryObj.sort
+        let query = Movie.find(queryObj);
+        if (req.query.sort){
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+        }else{
+            query = query.sort('-createdAt');
+        }
+        const movies = await query
+
         res.status(200).json({
             status:'success',
             length:movies.length,
