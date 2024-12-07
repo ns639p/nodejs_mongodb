@@ -11,6 +11,8 @@ exports.getAllMovies = async(req,res)=>{
         let queryObj = JSON.parse(queryStr);
         delete queryObj.sort
         delete queryObj.fields
+        delete queryObj.limit
+        delete queryObj.page
         let query = Movie.find(queryObj);
         if (req.query.sort){
             const sortBy = req.query.sort.split(',').join(' ');
@@ -24,6 +26,18 @@ exports.getAllMovies = async(req,res)=>{
         }else{
             query=query.select('-__v');
         }
+
+        const page = req.query.page*1||10;
+        const limit = req.query.limit*1||10;
+        const skip = (page-1)*limit;
+        query = query.skip(skip).limit(limit);
+        if (req.query.page){
+            const moviesCount = await Movie.countDocuments()
+            if (skip>=moviesCount){
+                throw new Error('This page is not found')
+            }
+        }
+
         const movies = await query
 
         res.status(200).json({
