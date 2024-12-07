@@ -10,12 +10,19 @@ exports.getAllMovies = async(req,res)=>{
         queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g,(match)=>`$${match}`);
         let queryObj = JSON.parse(queryStr);
         delete queryObj.sort
+        delete queryObj.fields
         let query = Movie.find(queryObj);
         if (req.query.sort){
             const sortBy = req.query.sort.split(',').join(' ');
             query = query.sort(sortBy);
         }else{
             query = query.sort('-createdAt');
+        }
+        if (req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            query=query.select(fields) 
+        }else{
+            query=query.select('-__v');
         }
         const movies = await query
 
