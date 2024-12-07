@@ -1,7 +1,11 @@
 const Movie = require('./../Models/movieModel')
 
 
-
+exports.highestRated = (req,res,next)=>{
+    req.query.limit = '5';
+    req.query.sort='-ratings';
+    next();
+}
 
 
 exports.getAllMovies = async(req,res)=>{
@@ -27,7 +31,7 @@ exports.getAllMovies = async(req,res)=>{
             query=query.select('-__v');
         }
 
-        const page = req.query.page*1||10;
+        const page = req.query.page*1||1;
         const limit = req.query.limit*1||10;
         const skip = (page-1)*limit;
         query = query.skip(skip).limit(limit);

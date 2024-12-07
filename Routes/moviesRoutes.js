@@ -4,7 +4,8 @@ const moviesController = require('./../Controllers/moviesController')
 
 const router = express.Router();
 //router.param('id',moviesController.checkid)
-
+router.route('/highest_rated')
+    .get(moviesController.highestRated,moviesController.getAllMovies)
 router.route('/')
     .get(moviesController.getAllMovies)
     .post(moviesController.createMovie)
