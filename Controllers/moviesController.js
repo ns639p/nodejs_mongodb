@@ -1,5 +1,5 @@
 const Movie = require('./../Models/movieModel')
-
+const ApiFeatures = require('./../utils/ApiFeatures')
 
 exports.highestRated = (req,res,next)=>{
     req.query.limit = '5';
@@ -10,40 +10,8 @@ exports.highestRated = (req,res,next)=>{
 
 exports.getAllMovies = async(req,res)=>{
     try{
-        let queryStr = JSON.stringify(req.query);
-        queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g,(match)=>`$${match}`);
-        let queryObj = JSON.parse(queryStr);
-        delete queryObj.sort
-        delete queryObj.fields
-        delete queryObj.limit
-        delete queryObj.page
-        let query = Movie.find(queryObj);
-        if (req.query.sort){
-            const sortBy = req.query.sort.split(',').join(' ');
-            query = query.sort(sortBy);
-        }else{
-            query = query.sort('-createdAt');
-        }
-        if (req.query.fields){
-            const fields = req.query.fields.split(',').join(' ');
-            query=query.select(fields) 
-        }else{
-            query=query.select('-__v');
-        }
-
-        const page = req.query.page*1||1;
-        const limit = req.query.limit*1||10;
-        const skip = (page-1)*limit;
-        query = query.skip(skip).limit(limit);
-        if (req.query.page){
-            const moviesCount = await Movie.countDocuments()
-            if (skip>=moviesCount){
-                throw new Error('This page is not found')
-            }
-        }
-
-        const movies = await query
-
+        const features = new ApiFeatures(Movie.find(),req.query).filter().sort().limitFields().paginate();
+        const movies = await features.query
         res.status(200).json({
             status:'success',
             length:movies.length,
