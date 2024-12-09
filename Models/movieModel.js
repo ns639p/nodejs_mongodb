@@ -74,6 +74,27 @@ movieSchema.post('save',function(doc,next){
     next();
 })
 
+
+const findMethods = ['find', 'findOne'];
+
+findMethods.forEach(method => {
+    movieSchema.pre(method, function(next) {
+        this.startTime = Date.now();
+        // Optional: filter for movies with release date less than or equal to now
+        this.where('releaseDate').lte(Date.now());
+        next();
+    });
+
+    movieSchema.post(method, function(docs, next) {
+        const endTime = Date.now();
+        const content = `${method.toUpperCase()} query returned in ${endTime - this.startTime} milliseconds\n`;
+        fs.appendFile('./Log/log.txt', content, (err) => {
+            if (err) console.error(err);
+        });
+        next();
+    });
+});
+
 movieSchema.virtual('durationInHours').get(function(){
     return this.duration/60
 })

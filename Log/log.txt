@@ -1,2 +1,5 @@
 A new movie document with name Black Adam has been created by Naren
 A new movie document with name Plane has been created by Naren
+A new movie document with name Test 2 has been created by Naren
+FINDONE query returned in 86 milliseconds
+FIND query returned in 84 milliseconds
