@@ -3,3 +3,14 @@ A new movie document with name Plane has been created by Naren
 A new movie document with name Test 2 has been created by Naren
 FINDONE query returned in 86 milliseconds
 FIND query returned in 84 milliseconds
+FIND query returned in 152 milliseconds
+A new movie document with name abcd has been created by Naren
+FIND query returned in 128 milliseconds
+FIND query returned in 93 milliseconds
+A new movie document with name abcd has been created by Naren
+FIND query returned in 122 milliseconds
+FIND query returned in 97 milliseconds
+FIND query returned in 105 milliseconds
+A new movie document with name abcde has been created by Naren
+FIND query returned in 121 milliseconds
+FIND query returned in 327 milliseconds
