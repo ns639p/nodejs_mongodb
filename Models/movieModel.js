@@ -95,6 +95,11 @@ findMethods.forEach(method => {
     });
 });
 
+movieSchema.pre('aggregate',function(next){
+    console.log(this.pipeline().unshift({$match:{releaseDate:{$lte:new Date()}}}));
+    next();
+})
+
 movieSchema.virtual('durationInHours').get(function(){
     return this.duration/60
 })
