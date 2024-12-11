@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const fs = require('fs')
+const fs = require('fs');
+const validator = require('validator');
 const movieSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -7,7 +8,8 @@ const movieSchema = new mongoose.Schema({
         maxLength:[100,'Movie name must be less than 100 characters'],
         minLength:[3,'Movie name must contain more than three characters'],
         unique:true,
-        trim:true
+        trim:true,
+        validate:[validator.isAlpha,"Name should contain alphabet"]
     },
     description:{
         type:String,
@@ -20,8 +22,12 @@ const movieSchema = new mongoose.Schema({
     },
     ratings:{
         type:Number,
-        min:[1,'ratings must be greater than or equal to 1'],
-        max:[10,'ratings must be lesser than or equal to 10']
+        validate:{
+            validator:function(value){
+                return value>=1 && value<=10
+            },
+            message:"The ratings must be above 1 and below 10"
+        }
     },
     totalRatings: {
         type:Number
@@ -109,10 +115,10 @@ movieSchema.pre('aggregate',function(next){
 })
 
 movieSchema.virtual('durationInHours').get(function(){
-    return this.duration/60
+    return this.duration/60;
 })
 
 const Movie = mongoose.model('Movie',movieSchema);
 
 
-module.exports=Movie
+module.exports=Movie;
