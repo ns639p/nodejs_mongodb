@@ -14,3 +14,4 @@ FIND query returned in 105 milliseconds
 A new movie document with name abcde has been created by Naren
 FIND query returned in 121 milliseconds
 FIND query returned in 327 milliseconds
+FIND query returned in 101 milliseconds

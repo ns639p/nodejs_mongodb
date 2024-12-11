@@ -21,7 +21,13 @@ app.use((req,res,next)=>{
 })
 
 
-
 app.use('/api/v1/movies',moviesRouter)
+
+app.all('*',(req,res,next)=>{
+    res.status(404).json({
+        status:'failed',
+        message:`Can't find ${req.originalUrl} on the server`
+    })
+})
 
 module.exports = app;
