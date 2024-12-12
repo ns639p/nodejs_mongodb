@@ -21,3 +21,4 @@ A new movie document with name Martian has been created by Naren
 FIND query returned in 114 milliseconds
 FINDONE query returned in 110 milliseconds
 FINDONE query returned in 111 milliseconds
+FIND query returned in 123 milliseconds
