@@ -1,8 +1,9 @@
 const express = require('express');
 const morgan = require('morgan')//this is a HTTP logging middleware
+const globalErrorHandler = require('./Controllers/errorController')
 const app = express()
 const moviesRouter = require('./Routes/moviesRoutes');
-
+const CustomError = require('./utils/CustomError')
 const logger = function(req,res,next){
     console.log('custom middleware called');
     next()
@@ -28,19 +29,13 @@ app.all('*',(req,res,next)=>{
     //     status:'failed',
     //     message:`Can't find ${req.originalUrl} on the server`
     // })
-    const err = new Error(`Can't find ${req.originalUrl} on the server`)
-    err.status='Fail';
-    err.statusCode = 404;
+    // const err = new Error(`Can't find ${req.originalUrl} on the server`)
+    // err.status='Fail';
+    // err.statusCode = 404;
+    const err = new CustomError(`Can't find ${req.originalUrl} on the server`,404)
     next(err);
 })
 
-app.use((error,req,res,next)=>{
-    error.statusCode = error.statusCode||500;
-    error.status=error.status||'error';
-    res.status(error.statusCode).json({
-        status:error.status,
-        message:error.message
-    })
-})
+app.use(globalErrorHandler)
 
 module.exports = app;
