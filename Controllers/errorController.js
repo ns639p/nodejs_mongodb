@@ -27,15 +27,22 @@ function castErrorHandler (error){
     const msg = `Invalid value for ${error.path}: ${error.value}` 
     return new CustomError(msg,400);
 }
+
+
+function duplicateKeyErrorHandler(error){
+    const name = error.keyValue.name
+    const msg = `There is already a movie with the name ${name}`;
+    return new CustomError(msg,400)
+}
+
 module.exports = (error,req,res,next)=>{
     error.statusCode = error.statusCode||500;
     error.status=error.status||'error';
     if (process.env.NODE_ENV === 'development'){
         developmentError(res,error)
     }else if (process.env.NODE_ENV==='production'){
-        if (error.name === 'CastError'){
-            error = castErrorHandler(error);
-        }
+        if (error.name === 'CastError')error = castErrorHandler(error);
+        if (error.code === 11000) error = duplicateKeyErrorHandler(error);
         productionError(res,error);
     }
 }
