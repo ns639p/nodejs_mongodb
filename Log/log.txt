@@ -17,3 +17,5 @@ FIND query returned in 327 milliseconds
 FIND query returned in 101 milliseconds
 FIND query returned in 175 milliseconds
 FIND query returned in 171 milliseconds
+A new movie document with name Martian has been created by Naren
+FIND query returned in 114 milliseconds
