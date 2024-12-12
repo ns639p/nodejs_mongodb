@@ -35,6 +35,14 @@ function duplicateKeyErrorHandler(error){
     return new CustomError(msg,400)
 }
 
+
+function validationErrorHandler(error){
+    const errors = Object.values(error.errors).map(val=>val.message);
+    const errorMessages = errors.join(', ');
+    return new CustomError(errorMessages,400)
+}
+
+
 module.exports = (error,req,res,next)=>{
     error.statusCode = error.statusCode||500;
     error.status=error.status||'error';
@@ -43,6 +51,7 @@ module.exports = (error,req,res,next)=>{
     }else if (process.env.NODE_ENV==='production'){
         if (error.name === 'CastError')error = castErrorHandler(error);
         if (error.code === 11000) error = duplicateKeyErrorHandler(error);
+        if (error.name === 'ValidationError') error = validationErrorHandler(error);
         productionError(res,error);
     }
 }
