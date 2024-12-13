@@ -3,6 +3,7 @@ const morgan = require('morgan')//this is a HTTP logging middleware
 const globalErrorHandler = require('./Controllers/errorController')
 const app = express()
 const moviesRouter = require('./Routes/moviesRoutes');
+const authRouter = require('./Routes/authRoutes')
 const CustomError = require('./utils/CustomError')
 const logger = function(req,res,next){
     console.log('custom middleware called');
@@ -22,7 +23,11 @@ app.use((req,res,next)=>{
 })
 
 
-app.use('/api/v1/movies',moviesRouter)
+app.use('/api/v1/movies',moviesRouter);
+
+
+app.use('/api/v1/users',authRouter)
+
 
 app.all('*',(req,res,next)=>{
     // res.status(404).json({
