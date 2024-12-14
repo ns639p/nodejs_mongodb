@@ -55,7 +55,7 @@ exports.login = asyncErrorHandler(async(req,res,next)=>{
 exports.protect = asyncErrorHandler(async(req,res,next)=>{
     const testToken = req.headers.authorization;
     let token;
-    if (testToken && testToken.startsWith('bearer')){
+    if (testToken && testToken.startsWith('Bearer')){
         token = testToken.split(' ')[1]
     }
 
@@ -65,6 +65,33 @@ exports.protect = asyncErrorHandler(async(req,res,next)=>{
 
     const decodedToken = await util.promisify(jwt.verify)(token,process.env.SECRET_STR)
     console.log(decodedToken)
-    console.log(token)
+
+    const user = await User.findById(decodedToken.id)
+    if(!user){
+        const error = new CustomError('User with the given token does not exist',401);
+        next (error);
+    }
+
+
+    const isChanged = await user.isPasswordChanged(decodedToken.iat)
+    if(isChanged){
+        const error = new CustomError('Password has been changed recently, Please login again',401);
+        next(error)
+    }
+
+
+    req.user=user;
     next()
 })
+
+
+
+exports.restrict = (role)=>{
+    return (req,res,next)=>{
+        if(req.user.role!==role){
+            const error = new CustomError('You do not have permission to perform this action',403);
+            next(error);
+        }
+        next();
+    }
+}

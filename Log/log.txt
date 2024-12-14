@@ -24,3 +24,7 @@ FINDONE query returned in 111 milliseconds
 FIND query returned in 123 milliseconds
 FIND query returned in 249 milliseconds
 FIND query returned in 121 milliseconds
+FIND query returned in 86 milliseconds
+FIND query returned in 88 milliseconds
+FIND query returned in 423 milliseconds
+FIND query returned in 95 milliseconds
