@@ -1,3 +1,4 @@
+const { findOne } = require('../Models/movieModel')
 const User = require('./../Models/userModel')
 const asyncErrorHandler = require('./../utils/asyncErrorHandler')
 const CustomError = require('./../utils/CustomError')
@@ -95,3 +96,18 @@ exports.restrict = (role)=>{
         next();
     }
 }
+
+
+exports.forgotPassword = asyncErrorHandler(async (req,res,next)=>{
+    const user = await User.findOne({email:req.body.email})
+    if(!user){
+        const error = new CustomError('We could not find the user with the given mail',404)
+        next(error);
+    }
+
+
+
+     const resetToken = user.createResetPasswordToken()
+
+     await user.save({validateBeforeSave:false})
+})
