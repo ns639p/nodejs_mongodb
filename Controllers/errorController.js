@@ -43,6 +43,16 @@ function validationErrorHandler(error){
 }
 
 
+function expiredJWT(error){
+    return new CustomError('JWT expired please login again',401)
+}
+
+
+
+function jsonWebTokenErrorHandler(error){
+    return new CustomError('Invalid token. please login again',401)
+}
+
 module.exports = (error,req,res,next)=>{
     error.statusCode = error.statusCode||500;
     error.status=error.status||'error';
@@ -52,6 +62,9 @@ module.exports = (error,req,res,next)=>{
         if (error.name === 'CastError')error = castErrorHandler(error);
         if (error.code === 11000) error = duplicateKeyErrorHandler(error);
         if (error.name === 'ValidationError') error = validationErrorHandler(error);
+        if (error.name === 'TokenExpiredError') error = expiredJWT(error);
+        if (error.name === 'JsonWebTokenError') error =jsonWebTokenErrorHandler(error)
+
         productionError(res,error);
     }
 }

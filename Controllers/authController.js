@@ -2,6 +2,7 @@ const User = require('./../Models/userModel')
 const asyncErrorHandler = require('./../utils/asyncErrorHandler')
 const CustomError = require('./../utils/CustomError')
 const jwt = require('jsonwebtoken')
+const util = require('util')
 
 const signToken = id =>{
     return jwt.sign({id},process.env.SECRET_STR,{
@@ -46,4 +47,24 @@ exports.login = asyncErrorHandler(async(req,res,next)=>{
         token,
         user
     })
+})
+
+
+
+
+exports.protect = asyncErrorHandler(async(req,res,next)=>{
+    const testToken = req.headers.authorization;
+    let token;
+    if (testToken && testToken.startsWith('bearer')){
+        token = testToken.split(' ')[1]
+    }
+
+    if(!token){
+        next(new CustomError('You are not logged in',401))
+    }
+
+    const decodedToken = await util.promisify(jwt.verify)(token,process.env.SECRET_STR)
+    console.log(decodedToken)
+    console.log(token)
+    next()
 })

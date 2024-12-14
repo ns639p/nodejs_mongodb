@@ -1,6 +1,6 @@
 const express = require('express')
 const moviesController = require('./../Controllers/moviesController')
-
+const authController = require('./../Controllers/authController')
 
 const router = express.Router();
 //router.param('id',moviesController.checkid)
@@ -15,7 +15,7 @@ router.route('/movie-by-genre/:genre')
 router.route('/highest_rated')
     .get(moviesController.highestRated,moviesController.getAllMovies)
 router.route('/')
-    .get(moviesController.getAllMovies)
+    .get(authController.protect,moviesController.getAllMovies)
     .post(moviesController.createMovie)
 
 router.route('/:id')
